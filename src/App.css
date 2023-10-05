@@ -1,0 +1,193 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+body {
+  background-color: gray;
+}
+
+.web-movie-app {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  text-align: center;
+  border-radius: 0px;
+  padding-bottom: 32px;
+  margin-left: 15px;
+  margin-right: 15px;
+  border: 1px solid gray;
+}
+
+.menubar {
+  flex-direction: column;
+  height: 80px;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 0px;
+  box-sizing: border-box;
+  justify-content: center;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.users {
+  text-align: end;
+  margin-top: 5px;
+  margin-right: 50px;
+  justify-content: end;
+  border-radius: 20px;
+}
+
+.menupage {
+  flex-direction: column;
+  height: 90px;
+  background: #00008b;
+  border-radius: 0px;
+  box-sizing: border-box;
+  justify-content: center;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.logopage {
+  color: #dc143c;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: start;
+  margin-left: 30px;
+}
+
+.account {
+  text-align: end;
+  margin-top: 5px;
+  margin-right: 0px;
+  justify-content: end;
+  border-radius: 20px;
+  color: #dc143c;
+}
+
+.inputSearch {
+  justify-content: center;
+  width: 400px;
+  background: rgba(0, 0, 0, 0);
+  border: none;
+  outline: none;
+  font-size: 20px;
+  margin-left: 15px;
+  color: #dc143c;
+}
+
+.slick-prev {
+  display: none;
+}
+
+.formSearchPage {
+  justify-content: center;
+  width: 500px;
+  height: 45px;
+  margin-top: 5px;
+  border: 3px solid #dc143c;
+  border-radius: 20px;
+  font-size: 20px;
+  text-color: #dc143c;
+  text-align: center;
+  margin: 4px auto;
+}
+
+.detilSearchPage {
+  justify-content: center;
+  width: 800px;
+  text-align: center;
+  margin: 4px auto;
+  margin-top: 20px;
+}
+
+.slider1 {
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+  text-align: start;
+  background-image: url(Components/Image/drstrange.jpg);
+  border-radius: 5px;
+  padding-bottom: 32px;
+  color: white;
+}
+
+.slider2 {
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+  background-color: white;
+  text-align: start;
+  background-image: url(Components/Image/groot.jpg);
+  border-radius: 5px;
+  padding-bottom: 32px;
+}
+
+.slider3 {
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+  background-color: white;
+  text-align: start;
+  background-image: url(Components/Image/minions.jpg);
+  border-radius: 5px;
+  padding-bottom: 32px;
+}
+
+.slider4 {
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+  background-color: white;
+  text-align: start;
+  background-image: url(Components/Image/syrax.jpg);
+  border-radius: 5px;
+  padding-bottom: 32px;
+}
+
+.slider5 {
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+  background-color: white;
+  text-align: start;
+  background-image: url(Components/Image/missmarvel.jpg);
+  border-radius: 5px;
+  padding-bottom: 32px;
+}
+
+.title {
+  color: white;
+  margin-left: 30px;
+  margin-top: 50px;
+  font-size: 50px;
+}
+
+.Deskripsi {
+  color: white;
+  margin-left: 30px;
+  margin-top: 20px;
+  font-size: 15px;
+}
+
+.nama {
+  color: black;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.todo-group-form {
+  align-items: center;
+
+  color: black;
+  background: white;
+  border-radius: 5px;
+  width: 100%;
+
+  margin-top: 50px;
+}
+
+/*  */
