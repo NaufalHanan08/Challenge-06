@@ -13,17 +13,29 @@ const PopularMovie = () => {
   };
 
   const [popular, setPopular] = useState([]);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    axios
-      .get(`https://api.themoviedb.org/3/movie/popular?api_key=44bb27216833398dd75c6b3cf00f51bd&language=en-US`)
-      .then((response) => {
-        setPopular(response.data.results);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    if (token) {
+      // Ubah logika di sini, cek apakah token ada di localStorage
+      const apiUrl = 'https://shy-cloud-3319.fly.dev/api/v1/movie/popular';
+
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setPopular(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      setPopular([]);
+    }
+  }, [token]); // Hanya perlu memantau perubahan token
 
   const settings = {
     className: 'center',
@@ -37,31 +49,42 @@ const PopularMovie = () => {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ marginTop: 100 }}>
-        <Paper elevation={3} style={{ margin: 35, marginBottom: 50 }}>
-          <Row md={2}>
-            <Col>
-              <h4 style={{ textAlign: 'start', marginLeft: 30, marginTop: 20 }}> Popular Movie</h4>
-            </Col>
-            <Col>
-              <Link to="movie/popular" style={{ textDecoration: 'none' }}>
-                <p style={{ textAlign: 'end', color: '#dc143c', cursor: 'pointer', marginRight: 30, marginTop: 20 }}>
-                  See All Movie <ArrowForwardRoundedIcon />
-                </p>
-              </Link>
-            </Col>
-          </Row>
-          <Slider {...settings}>
-            {popular.map((movie) => {
-              return (
-                <Tooltip title={movie.title || movie.original_name}>
-                  <Link to={`/details/${movie.id}${movie.title || movie.original_name}`}>
-                    <img src={getPoster(movie.poster_path)} alt="name" style={{ margin: 20, width: 350, height: 500, borderRadius: 5, cursor: 'pointer' }} />
-                  </Link>
-                </Tooltip>
-              );
-            })}
-          </Slider>
-        </Paper>
+        {popular.length > 0 ? (
+          <Paper elevation={3} style={{ margin: 35, marginBottom: 50 }}>
+            <Row md={2}>
+              <Col>
+                <h4 style={{ textAlign: 'start', marginLeft: 30, marginTop: 20 }}>Popular Movie</h4>
+              </Col>
+              <Col>
+                <Link to="movie/popular" style={{ textDecoration: 'none' }}>
+                  <p
+                    style={{
+                      textAlign: 'end',
+                      color: '#dc143c',
+                      cursor: 'pointer',
+                      marginRight: 30,
+                      marginTop: 20,
+                    }}
+                  >
+                    See All Movie <ArrowForwardRoundedIcon />
+                  </p>
+                </Link>
+              </Col>
+            </Row>
+            <Slider {...settings}>
+              {popular.map((movie) => {
+                return (
+                  <Tooltip title={movie.title || movie.original_title}>
+                    <Link to={`/details/${movie.id}`}>
+                      <img src={getPoster(movie.poster_path)} alt={movie.title || movie.original_title} style={{ margin: 20, width: 350, height: 500, borderRadius: 5, cursor: 'pointer' }} />
+                    </Link>
+                  </Tooltip>
+                );
+              })}
+            </Slider>
+          </Paper>
+        ) : null}{' '}
+        {/* Hapus pesan "Silakan login untuk melihat Popular Movies" */}
       </div>
     </div>
   );

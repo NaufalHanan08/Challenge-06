@@ -12,15 +12,23 @@ function SearchMovie() {
 
   useEffect(() => {
     const searchMovies = () => {
+      // Ganti "{{TOKEN}}" dengan cara yang sesuai untuk mengambil token otorisasi dari local storage
+      const token = localStorage.getItem('token');
+
       axios
-        .get(`https://api.themoviedb.org/3/search/movie?api_key=8aced447ac0b69fe5ae000b735a3adef&language=en-US&query=${searchKey}&page=1&include_adult=false`)
+        .get(`https://shy-cloud-3319.fly.dev/api/v1/search/movie?page=1&query=${searchKey}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
-          setSearch(response.data.results);
+          setSearch(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     };
+
     if (searchKey === '') {
       setSearch([]);
       return;
@@ -65,7 +73,7 @@ function SearchMovie() {
       </div>
       <div>
         <Slider {...settings}>
-          {search.length > 1 &&
+          {search.length > 0 &&
             search.map((movie, index) => {
               return <RendersMovie key={movie.id} movie={movie} />;
             })}
@@ -74,4 +82,5 @@ function SearchMovie() {
     </div>
   );
 }
+
 export default SearchMovie;

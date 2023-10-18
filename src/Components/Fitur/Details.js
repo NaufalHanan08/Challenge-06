@@ -24,22 +24,32 @@ function Detail() {
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
-        const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=5a1a8d073c4a8515a69dc7913d6f19ad`);
-        const movieData = response.data;
+        const token = localStorage.getItem('token');
 
-        if (movieData && movieData.id) {
-          setMovieDetails(movieData);
+        if (token) {
+          const apiUrl = `https://shy-cloud-3319.fly.dev/api/v1/movie/${id}`;
 
-          // Mengambil tautan trailer dari API TMDb (melalui endpoint videos)
-          const videosResponse = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=5a1a8d073c4a8515a69dc7913d6f19ad`);
-          const videosData = videosResponse.data.results;
+          const response = await axios.get(apiUrl, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-          if (videosData.length > 0) {
-            const trailerKey = videosData[0].key;
-            setTrailerLink(`https://www.youtube.com/watch?v=${trailerKey}`);
+          const movieData = response.data.data;
+
+          if (movieData && movieData.id) {
+            setMovieDetails(movieData);
+
+            const videosResponse = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=5a1a8d073c4a8515a69dc7913d6f19ad`);
+            const videosData = videosResponse.data.results;
+
+            if (videosData.length > 0) {
+              const trailerKey = videosData[0].key;
+              setTrailerLink(`https://www.youtube.com/watch?v=${trailerKey}`);
+            }
+          } else {
+            console.error('Invalid movie ID or data not found');
           }
-        } else {
-          console.error('Invalid movie ID or data not found');
         }
       } catch (error) {
         console.error('Error fetching movie details:', error);
@@ -66,7 +76,7 @@ function Detail() {
           height: 650,
           justifyContent: 'center',
           textAlign: 'start',
-          backgroundImage: `url(${getBg(movieDetails.backdrop_path)})`,
+          backgroundImage: `url(${getBg(movieDetails.backdrop_path)}`,
         }}
       >
         <Row>
