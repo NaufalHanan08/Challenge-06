@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -6,46 +6,23 @@ import { Tooltip } from '@mui/material';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import SearchMovie from '../Fitur/SearchMovie';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout, getMe } from '../../redux/actions/authActions';
 
 const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
 function MenuBar() {
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    // Mendapatkan token dari local storage
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      // Lakukan permintaan ke API Postman untuk mendapatkan data pengguna setelah login
-      fetch('https://shy-cloud-3319.fly.dev/api/v1/auth/me', {
-        headers: {
-          Authorization: `Bearer ${token}`, // Menggunakan token dari local storage
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setUser(data.data);
-        })
-        .catch((error) => {
-          console.error('Error fetching user data:', error);
-        });
-    }
-  }, []); // Efek ini hanya perlu dijalankan sekali saat komponen dimuat
+    dispatch(getMe());
+  }, [dispatch]);
 
   const handleLogout = () => {
-    // Hapus token dari local storage
-    localStorage.removeItem('token');
-    // Hapus data pengguna
-    setUser(null);
-
-    // Hapus data "Popular Movies" dari localStorage saat logout
-    localStorage.removeItem('popularMovies');
-
-    // Redirect ke halaman login atau halaman lain setelah logout
-    // history.push('/login'); // Jika Anda menggunakan react-router
+    dispatch(logout());
   };
 
   return (

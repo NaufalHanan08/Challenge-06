@@ -1,41 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Slider from 'react-slick';
-import axios from 'axios';
 import { Col, Tooltip } from 'antd';
 import { Paper } from '@mui/material';
 import { Row } from 'react-bootstrap';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPopularMovies } from '../../redux/actions/popularMovieActions';
 
 const PopularMovie = () => {
   const getPoster = (posterpath) => {
     return `https://www.themoviedb.org/t/p/w440_and_h660_face${posterpath}`;
   };
 
-  const [popular, setPopular] = useState([]);
-  const token = localStorage.getItem('token');
+  const dispatch = useDispatch();
+  const popularMovies = useSelector((state) => state.popularMovies.popularMovies);
+  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
     if (token) {
-      // Ubah logika di sini, cek apakah token ada di localStorage
-      const apiUrl = 'https://shy-cloud-3319.fly.dev/api/v1/movie/popular';
-
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          setPopular(response.data.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      setPopular([]);
+      dispatch(fetchPopularMovies(token));
     }
-  }, [token]); // Hanya perlu memantau perubahan token
+  }, [token, dispatch]);
 
   const settings = {
     className: 'center',
@@ -49,7 +35,7 @@ const PopularMovie = () => {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ marginTop: 100 }}>
-        {popular.length > 0 ? (
+        {popularMovies.length > 0 ? (
           <Paper elevation={3} style={{ margin: 35, marginBottom: 50 }}>
             <Row md={2}>
               <Col>
@@ -72,7 +58,7 @@ const PopularMovie = () => {
               </Col>
             </Row>
             <Slider {...settings}>
-              {popular.map((movie) => {
+              {popularMovies.map((movie) => {
                 return (
                   <Tooltip title={movie.title || movie.original_title}>
                     <Link to={`/details/${movie.id}`}>

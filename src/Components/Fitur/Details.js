@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
 import { Paper } from '@mui/material';
 import { Col, Row } from 'react-bootstrap';
 import MenuHome from '../Menu/MenuHome';
 import Button from '@mui/material/Button';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import Rating from '@mui/material/Rating';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMovieDetails } from '../../redux/actions/detailActions';
 
 function Detail() {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const movieDetails = useSelector((state) => state.detail.movieDetails);
+  const isLoading = useSelector((state) => state.detail.isLoading);
+  const error = useSelector((state) => state.detail.error);
+
   const getPoster = (posterPath) => {
     return `https://www.themoviedb.org/t/p/original${posterPath}`;
   };
@@ -17,51 +24,23 @@ function Detail() {
     return `https://www.themoviedb.org/t/p/original${bgPath}`;
   };
 
-  const [movieDetails, setMovieDetails] = useState({});
-  const { id } = useParams();
-  const [trailerLink, setTrailerLink] = useState('');
+  const [trailerLink] = useState('');
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      try {
-        const token = localStorage.getItem('token');
-
-        if (token) {
-          const apiUrl = `https://shy-cloud-3319.fly.dev/api/v1/movie/${id}`;
-
-          const response = await axios.get(apiUrl, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          const movieData = response.data.data;
-
-          if (movieData && movieData.id) {
-            setMovieDetails(movieData);
-
-            const videosResponse = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=5a1a8d073c4a8515a69dc7913d6f19ad`);
-            const videosData = videosResponse.data.results;
-
-            if (videosData.length > 0) {
-              const trailerKey = videosData[0].key;
-              setTrailerLink(`https://www.youtube.com/watch?v=${trailerKey}`);
-            }
-          } else {
-            console.error('Invalid movie ID or data not found');
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching movie details:', error);
-      }
-    };
-
-    fetchMovieDetails();
-  }, [id]);
+    dispatch(fetchMovieDetails(id));
+  }, [dispatch, id]);
 
   const whiteText = {
     color: 'white',
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>
@@ -124,12 +103,7 @@ function Detail() {
             </div>
             <div style={{ margin: 15 }}>
               <h5 style={{ fontWeight: 'bold', marginBottom: 5, ...whiteText }}>Rating:</h5>
-              <Rating
-                name="movie-rating"
-                value={movieDetails.vote_average / 2} // Membagi nilai rating menjadi skala 0-5
-                precision={0.5}
-                readOnly
-              />
+              <Rating name="movie-rating" value={movieDetails.vote_average / 2} precision={0.5} readOnly />
             </div>
             {trailerLink && (
               <a href={trailerLink} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>

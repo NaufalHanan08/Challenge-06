@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Paper } from '@mui/material';
 import { Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 const RendersMovie = ({ movie }) => {
   const getPoster = (posterPath) => {

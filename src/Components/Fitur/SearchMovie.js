@@ -1,40 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Tooltip } from 'antd';
-import axios from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton } from '@mui/material';
 import RendersMovie from '../Movie/RendersMovie';
 import Slider from 'react-slick';
+import { searchMovies, clearSearchResults } from '../../redux/actions/searchMovieActions';
 
-function SearchMovie() {
-  const [search, setSearch] = useState([]);
+const SearchMovie = () => {
+  const dispatch = useDispatch();
+  const search = useSelector((state) => state.search.searchResults);
+
   const [searchKey, setSearchKey] = useState('');
 
   useEffect(() => {
-    const searchMovies = () => {
-      // Ganti "{{TOKEN}}" dengan cara yang sesuai untuk mengambil token otorisasi dari local storage
-      const token = localStorage.getItem('token');
-
-      axios
-        .get(`https://shy-cloud-3319.fly.dev/api/v1/search/movie?page=1&query=${searchKey}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          setSearch(response.data.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    };
-
-    if (searchKey === '') {
-      setSearch([]);
-      return;
+    if (searchKey.length >= 3) {
+      dispatch(searchMovies(searchKey));
+    } else {
+      dispatch(clearSearchResults());
     }
-    searchMovies();
-  }, [searchKey]);
+  }, [searchKey, dispatch]);
 
   const settings = {
     infinite: true,
@@ -51,26 +36,31 @@ function SearchMovie() {
   };
 
   return (
-    <div>
-      <div>
-        <form style={{ justifyContent: 'center', textAlign: 'center' }} className="formSearchPage">
-          <input
-            className="inputSearch"
-            style={{ color: 'red', fontWeight: 'bold' }}
-            placeholder="What do you want to watch"
-            type="text"
-            onChange={(e) => {
-              if (e.target.value === '') setSearch([]);
-              setSearchKey(e.target.value);
-            }}
-          />
-          <Tooltip title="Search">
-            <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
-              <SearchIcon color="primary" onClick={searchKey} />
-            </IconButton>
-          </Tooltip>
-        </form>
-      </div>
+    <div style={{ justifyContent: 'center', textAlign: 'center' }}>
+      <form className="formSearchPage">
+        <input
+          className="inputSearch"
+          style={{ color: 'red', fontWeight: 'bold' }}
+          placeholder="What do you want to watch"
+          type="text"
+          onChange={(e) => {
+            setSearchKey(e.target.value);
+          }}
+        />
+        <Tooltip title="Search">
+          <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+            <SearchIcon
+              color="primary"
+              onClick={() => {
+                if (searchKey.length >= 3) {
+                  dispatch(searchMovies(searchKey));
+                }
+              }}
+            />
+          </IconButton>
+        </Tooltip>
+      </form>
+
       <div>
         <Slider {...settings}>
           {search.length > 0 &&
@@ -81,6 +71,6 @@ function SearchMovie() {
       </div>
     </div>
   );
-}
+};
 
 export default SearchMovie;

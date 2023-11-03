@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useAuth } from './AuthContext';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/actions/authActions';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
@@ -14,33 +14,14 @@ import GoogleLogin from './GoogleLogin';
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [validation, setValidation] = useState([]);
-
+  const [validation] = useState([]);
   const history = useNavigate();
-  const { login } = useAuth();
+  const dispatch = useDispatch();
 
-  const loginHandler = async (e) => {
+  const loginHandler = (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post('https://shy-cloud-3319.fly.dev/api/v1/auth/login', {
-        email,
-        password,
-      });
-
-      console.log('Login berhasil', response.data);
-
-      const userData = response.data.data;
-
-      localStorage.setItem('token', userData.token);
-
-      login(userData);
-
-      history('/');
-    } catch (error) {
-      setValidation(error.response.data);
-      console.error('Login gagal', error);
-    }
+    dispatch(login({ email, password }, history));
   };
 
   return (

@@ -8,12 +8,13 @@ import HomeMenu from './Components/Home/HomeMenu';
 import Details from './Components/Fitur/Details';
 import Register from './Components/User/Register';
 import Login from './Components/User/Login';
-import { AuthProvider } from './Components/User/AuthContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 function App() {
   return (
-    <AuthProvider>
+    <Provider store={store}>
       <GoogleOAuthProvider clientId="604818404990-r0vci8876jbjc2ajmgd5f5lijo7eo09d.apps.googleusercontent.com">
         <div>
           <Routes>
@@ -24,7 +25,7 @@ function App() {
           </Routes>
         </div>
       </GoogleOAuthProvider>
-    </AuthProvider>
+    </Provider>
   );
 }
 

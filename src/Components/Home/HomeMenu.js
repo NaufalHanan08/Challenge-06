@@ -1,27 +1,23 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import SliderHome from '../Menu/SliderHome';
 import PopularMovie from '../Movie/PopularMovie';
 
 const HomeMenu = () => {
-  const token = localStorage.getItem('token'); // Cek apakah token ada di localStorage
+  const token = useSelector((state) => state.auth.token);
 
   const loginMessageStyle = {
     fontSize: '18px',
     marginTop: '100px',
     textAlign: 'center',
   };
+
   return (
     <div className="web-movie-app">
       <div>
         <SliderHome />
       </div>
-      <div>
-        {token ? (
-          <PopularMovie /> // Tampilkan PopularMovie jika token ada di localStorage
-        ) : (
-          <p style={loginMessageStyle}>Silakan login untuk melihat Popular Movies.</p>
-        )}
-      </div>
+      <div>{token ? <PopularMovie /> : <p style={loginMessageStyle}>Silakan login untuk melihat Popular Movies.</p>}</div>
       <footer
         style={{
           textAlign: 'center',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { register } from '../../redux/actions/authActions';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
@@ -19,6 +20,7 @@ export const Register = () => {
   const [validation, setValidation] = useState([]);
 
   const history = useNavigate();
+  const dispatch = useDispatch();
 
   const registerHandler = async (e) => {
     e.preventDefault();
@@ -26,13 +28,9 @@ export const Register = () => {
     const name = `${firstName} ${lastName}`;
 
     try {
-      const response = await axios.post('https://shy-cloud-3319.fly.dev/api/v1/auth/register', {
-        email,
-        name,
-        password,
-      });
+      await dispatch(register({ email, name, password }));
 
-      console.log('Register berhasil', response.data);
+      console.log('Register berhasil');
       history('/');
     } catch (error) {
       setValidation(error.response.data);
@@ -108,7 +106,7 @@ export const Register = () => {
           </Button>
           <Row style={{ marginTop: 20 }}>
             <Col className="text-center">
-              <GoogleLogin buttonText="Login with Google 🚀" />
+              <GoogleLogin buttonText="Register with Google 🚀" />
             </Col>
           </Row>
         </CardContent>
